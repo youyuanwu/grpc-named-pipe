@@ -3,6 +3,10 @@
   "name": "grpc-named-pipe",
   "version": "0.0.1",
   "dependencies": [
-    "grpc"
+    "grpc",
+    "boost-asio",
+    "boost-beast",
+    "boost-test",
+    "boost-log"
   ]
 }

@@ -17,6 +17,8 @@ project(grpc_named_pipe VERSION 0.0.1 LANGUAGES CXX)
 
 message(STATUS "vcpkg installed dir: ${VCPKG_INSTALLED_DIR}")
 
+set(Boost_NO_WARN_NEW_VERSIONS ON)
+
 message(STATUS "fetching winasio")
 include(FetchContent)
 FetchContent_Declare(winasio
@@ -44,3 +46,8 @@ add_library(grpc_named_pipe STATIC ${_SOURCES})
 target_include_directories(grpc_named_pipe PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 target_link_libraries(grpc_named_pipe PUBLIC gRPC::grpc++ winasio)
+
+set_property(TARGET grpc_named_pipe PROPERTY CXX_STANDARD 17)
+
+enable_testing()
+add_subdirectory(tests)
