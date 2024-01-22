@@ -6,8 +6,8 @@ namespace gnp {
 
 NpEndpoint::NpEndpoint(
     std::string &local_name, std::string &peer_name,
-    winnet::named_pipe_protocol<net::io_context::executor_type>::pipe &&pipe,
-    ge::MemoryAllocator &&alloc)
+    winnet::named_pipe_protocol<net::thread_pool::executor_type>::pipe &&pipe,
+    ge::MemoryAllocator && alloc)
     : pipe_(std::move(pipe)), allocator_(std::move(alloc)), local_addr_(),
       peer_addr_() {
   {

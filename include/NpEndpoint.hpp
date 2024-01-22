@@ -4,6 +4,7 @@
 #include <grpc/event_engine/event_engine.h>
 
 #include <boost/winasio/named_pipe/named_pipe_protocol.hpp>
+#include "boost/asio/thread_pool.hpp"
 #include <memory>
 
 namespace gnp {
@@ -13,8 +14,10 @@ class NpEndpoint : public ge::EventEngine::Endpoint,
 public:
   NpEndpoint(
       std::string &local_name, std::string &peer_name,
-      winnet::named_pipe_protocol<net::io_context::executor_type>::pipe &&pipe,
-      ge::MemoryAllocator &&alloc);
+      winnet::named_pipe_protocol<net::thread_pool::executor_type>::pipe &&pipe,
+      ge::MemoryAllocator && alloc);
+    
+  NpEndpoint(NpEndpoint && other) = default;
 
   void Read(absl::AnyInvocable<void(absl::Status)> on_read,
             ge::SliceBuffer *buffer, const ReadArgs *args) override;
@@ -26,7 +29,7 @@ public:
   const ge::EventEngine::ResolvedAddress &GetLocalAddress() const override;
 
 private:
-  winnet::named_pipe_protocol<net::io_context::executor_type>::pipe pipe_;
+  winnet::named_pipe_protocol<net::thread_pool::executor_type>::pipe pipe_;
   ge::MemoryAllocator allocator_;
   // read buff
   char buffer_[1024];

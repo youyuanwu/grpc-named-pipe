@@ -1,8 +1,10 @@
 #include "NpEventEngine.hpp"
 #include "NpListener.hpp"
+#include "NpEndpoint.hpp"
 
 #include <boost/asio/high_resolution_timer.hpp>
 #include <boost/asio/post.hpp>
+#include <boost/winasio/named_pipe/named_pipe_protocol.hpp>
 
 namespace gnp {
 
@@ -32,17 +34,37 @@ NpEventEngine::Connect(OnConnectCallback on_connect,
                        const ResolvedAddress &addr,
                        const ge::EndpointConfig &args,
                        ge::MemoryAllocator memory_allocator, Duration timeout) {
-  UNREFERENCED_PARAMETER(on_connect);
-  UNREFERENCED_PARAMETER(addr);
   UNREFERENCED_PARAMETER(args);
-  UNREFERENCED_PARAMETER(memory_allocator);
-  UNREFERENCED_PARAMETER(timeout);
-  // client not implemented
-  BOOST_ASSERT(false);
-  return ge::EventEngine::ConnectionHandle{};
+
+  winnet::named_pipe_protocol<decltype(tp_.get_executor())>::pipe p(tp_.get_executor());
+  BOOST_ASSERT_MSG(addr.address()->sa_family == AF_UNIX, "AF not right");
+  std::string endpoint(addr.address()->sa_data);
+  boost::system::error_code ec;
+  long long ms = std::chrono::duration_cast<std::chrono::milliseconds>(timeout).count();
+  p.connect(endpoint, ec, static_cast<std::uint32_t>(ms));
+  if(ec.failed())
+  {
+    auto status = absl::UnavailableError(absl::StrCat("Fail to connect to np: ", endpoint));
+    std::move(on_connect)(status);
+    return ConnectionHandle{};
+  }
+
+  auto ep = std::make_unique<NpEndpoint>(
+    std::string{}, // local name
+    endpoint, // peer name
+    std::move(p),
+    std::move(memory_allocator)
+  );
+  std::move(on_connect)(std::move(ep));
+
+  static std::atomic_uint32_t counter;
+
+  return ge::EventEngine::ConnectionHandle{0, counter};
 }
 
+
 bool NpEventEngine::CancelConnect(ConnectionHandle handle) {
+// connect is sync so there is no cancel
   UNREFERENCED_PARAMETER(handle);
   BOOST_ASSERT(false);
   return false;

@@ -1,0 +1,36 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "(Windows) Launch",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/examples/Debug/greeter_client.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        {
+          "name": "GRPC_EXPERIMENTS",
+          "value": "event_engine_client"
+        },
+        {
+          "name": "GRPC_TRACE",
+          "value": "all"
+        },
+        {
+          "name": "GRPC_VERBOSITY",
+          "value": "debug"
+        },
+        {
+          "name": "GRPC_DNS_RESOLVER",
+          "value": "native"
+        }
+      ],
+      "console": "externalTerminal"
+    }
+  ]
+}

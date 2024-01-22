@@ -23,7 +23,7 @@ message(STATUS "fetching winasio")
 include(FetchContent)
 FetchContent_Declare(winasio
   GIT_REPOSITORY https://github.com/youyuanwu/winasio.git
-  GIT_TAG 65abb5809333d72ccade9ecb479ce3c02df88f09)
+  GIT_TAG 50a7641f192bfc3bf010777a9a4800fe8e2fdb84)
 FetchContent_GetProperties(winasio)
 if(NOT winasio_POPULATED)
   FetchContent_Populate(winasio)
@@ -49,5 +49,6 @@ target_link_libraries(grpc_named_pipe PUBLIC gRPC::grpc++ winasio)
 
 set_property(TARGET grpc_named_pipe PROPERTY CXX_STANDARD 17)
 
+add_subdirectory(examples)
 enable_testing()
 add_subdirectory(tests)
