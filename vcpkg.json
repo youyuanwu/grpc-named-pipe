@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "grpc-named-pipe",
+  "version": "0.0.1",
+  "dependencies": [
+    "grpc",
+    "boost-asio",
+    "boost-beast",
+    "boost-test",
+    "boost-log"
+  ]
+}
