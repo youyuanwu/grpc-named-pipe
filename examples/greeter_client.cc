@@ -35,6 +35,8 @@
 #include <memory>
 #include <string>
 
+//#include <cstdlib>
+
 #include <grpc++/grpc++.h>
 
 #ifdef BAZEL_BUILD
@@ -96,6 +98,11 @@ int main(int argc, char** argv) {
   // (use of InsecureChannelCredentials()).
   UNREFERENCED_PARAMETER(argc);
   UNREFERENCED_PARAMETER(argv);
+  // Set ev and dns feature switch
+  int ret = _putenv("GRPC_EXPERIMENTS=event_engine_client,event_engine_dns");
+  if (ret != 0) {
+    return 1;
+  }
 
   grpc_event_engine::experimental::SetEventEngineFactory([]()->std::unique_ptr<grpc_event_engine::experimental::EventEngine>{
     return std::make_unique<gnp::NpEventEngine>();

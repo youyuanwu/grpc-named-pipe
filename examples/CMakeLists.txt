@@ -33,6 +33,7 @@ add_executable(greeter_server
 target_link_libraries(greeter_server
     gRPC::grpc++_reflection
     protobuf::libprotobuf
+    grpc_named_pipe
 )
 
 # Building client

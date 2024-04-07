@@ -5,6 +5,31 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "(Windows) Launch Server",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/examples/Debug/greeter_server.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${fileDirname}",
+      "environment": [
+        {
+          "name": "GRPC_TRACE",
+          "value": "all"
+        },
+        {
+          "name": "GRPC_VERBOSITY",
+          "value": "debug"
+        },
+        {
+          "name": "GRPC_DNS_RESOLVER",
+          "value": "native"
+        }
+      ],
+      "console": "externalTerminal"
+    },
+    
+    {
       "name": "(Windows) Launch",
       "type": "cppvsdbg",
       "request": "launch",

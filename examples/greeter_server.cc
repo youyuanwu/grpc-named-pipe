@@ -43,6 +43,9 @@
 #include "helloworld.grpc.pb.h"
 #endif
 
+#include "NpEventEngine.hpp"
+#include "grpc/event_engine/event_engine.h"
+
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
@@ -62,7 +65,12 @@ class GreeterServiceImpl final : public Greeter::Service {
 };
 
 void RunServer() {
-  std::string server_address("0.0.0.0:50051");
+  grpc_event_engine::experimental::SetEventEngineFactory([]()->std::unique_ptr<grpc_event_engine::experimental::EventEngine>{
+    return std::make_unique<gnp::NpEventEngine>();
+  });
+
+
+  std::string server_address("\\\\.\\pipe\\mynamedpipe");
   GreeterServiceImpl service;
 
   ServerBuilder builder;
@@ -81,6 +89,11 @@ void RunServer() {
 }
 
 int main(int argc, char** argv) {
+  // Set ev and dns feature switch
+  int ret = _putenv("GRPC_EXPERIMENTS=event_engine_listener,event_engine_client,event_engine_dns");
+  if (ret != 0) {
+    return 1;
+  }
   RunServer();
 
   return 0;
