@@ -23,7 +23,7 @@ message(STATUS "fetching winasio")
 include(FetchContent)
 FetchContent_Declare(winasio
   GIT_REPOSITORY https://github.com/youyuanwu/winasio.git
-  GIT_TAG 50a7641f192bfc3bf010777a9a4800fe8e2fdb84)
+  GIT_TAG edcf086c4cb0f92598bd6d113c6be733290dd61c)
 FetchContent_GetProperties(winasio)
 if(NOT winasio_POPULATED)
   FetchContent_Populate(winasio)
@@ -39,7 +39,7 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 
 option(USE_LOCAL_GRPC   "Use local grpc source" OFF)
-set(USE_LOCAL_GRPC ON)
+set(USE_LOCAL_GRPC OFF)
 if(USE_LOCAL_GRPC)
   set(gRPC_INSTALL_default OFF)
   set(protobuf_INSTALL OFF)
